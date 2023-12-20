@@ -27,6 +27,12 @@ public class UserInputHandler : MonoBehaviour
     /// </summary>
     public event Action OnMKeyPressed = () => { };
 
+    /// <summary>
+    /// Notify the subscribers that space key was pressed.
+    /// The event to reset game.
+    /// </summary>
+    public event Action OnEscapeKeyPressed = () => { };
+
     // Update is called once per frame
     void Update()
     {
@@ -48,6 +54,11 @@ public class UserInputHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
             OnMKeyPressed();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnEscapeKeyPressed();
         }
     }
 }
