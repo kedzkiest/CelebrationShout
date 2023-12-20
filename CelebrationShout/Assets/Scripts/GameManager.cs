@@ -87,6 +87,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         // Initialize Sound
         SoundPlayer.Instance.Initialize();
+
+        // Initialie savedata
+        SaveManager.Instance.Initialize();
     }
 
     /// <summary>
@@ -143,6 +146,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         announcePreparationCoroutine = StartCoroutine(DoAnnouncePreparation());
     }
 
+    /// <summary>
+    /// The game time when a celebration announce was made.
+    /// </summary>
+    float announceTime;
     private IEnumerator DoAnnouncePreparation()
     {
         currentGameState = GameState.WAITING_ANNOUNCE;
@@ -151,6 +158,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SoundPlayer.Instance.Play(SoundTable.SoundName.DRUM_ROLL);
         yield return new WaitForSeconds(Random.Range(minPreparationTime, maxPreparationTime));
         Debug.Log("Preparation Finish");
+        announceTime = Time.time;
+        Debug.Log(announceTime);
         SoundPlayer.Instance.Stop();
         SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.DRUM_ROLL_FINISH);
 
@@ -162,7 +171,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// How much time player shout last.
     /// Used for adjusting judge timing
     /// </summary>
-    float shoutTime;
+    float shoutDuration;
     private void OnShoutKeyPressed(ShoutType _shoutType)
     {
         bool cannotShout =
@@ -176,21 +185,21 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // Play SE
         if(_shoutType == ShoutType.HAPPY_BIRTHDAY)
         {
-            shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_BIRTHDAY);
+            shoutDuration = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_BIRTHDAY);
         }
         else if(_shoutType == ShoutType.HAPPY_NEW_YEAR)
         {
-            shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_NEW_YEAR);
+            shoutDuration = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_NEW_YEAR);
         }
         else
         {
-            shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.MERRY_CHRISTMAS);
+            shoutDuration = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.MERRY_CHRISTMAS);
         }
 
         // Progress game sequence (penalty sequence)
         if (currentGameState == GameState.WAITING_ANNOUNCE)
         {
-            StartCoroutine(WaitBeforePenalty(shoutTime));
+            StartCoroutine(WaitBeforePenalty(shoutDuration));
 
             StartCoroutine(ForceShout(false));
         }
@@ -211,18 +220,30 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SoundPlayer.Instance.Stop();
     }
 
+    /// <summary>
+    /// The game time when a correct answer by player was made.
+    /// </summary>
+    float correctAnswerTime;
     private IEnumerator ForceShout(bool _isCorrectAnswer)
     {
         currentGameState = GameState.PLAYER_SHOUTING;
 
+        correctAnswerTime = Time.time;
         Debug.Log("Player starts shouting");
-        yield return new WaitForSeconds(shoutTime);
+        yield return new WaitForSeconds(shoutDuration);
         Debug.Log("Player finishes shouting");
 
         if(_isCorrectAnswer)
         {
             Debug.Log("Correct");
             SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.CORRECT_SHOUT);
+
+            // update best score
+            float shoutTime = correctAnswerTime - announceTime;
+            if (shoutTime < SaveManager.Instance.GetQuickestShoutTime())
+            {
+                SaveManager.Instance.SetQuickestShoutTime(shoutTime);
+            }
         }
         else
         {
@@ -256,6 +277,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void ResetGame()
     {
         SoundPlayer.Instance.Stop();
+        SaveManager.Instance.ResetSaveData();
         StopAllCoroutines();
         Initialize();
     }
@@ -265,6 +287,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// </summary>
     private void OnDestroy()
     {
-        
+        SaveManager.Instance.Save();
     }
 }

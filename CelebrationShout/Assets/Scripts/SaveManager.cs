@@ -30,10 +30,20 @@ public class SaveManager
 
     private SaveData saveData;
 
+    public float GetQuickestShoutTime() { return saveData.quickestShoutTime; }
+    public void SetQuickestShoutTime(float _time) { saveData.quickestShoutTime = _time; }
+
     public void Initialize()
     {
         saveData = new SaveData();
         Load();
+
+        // Since float value is initialized to 0.0f, Change the initial value to
+        // float.MaxValue so that players can update the best score.
+        if(saveData.quickestShoutTime <= 0.0f)
+        {
+            saveData.quickestShoutTime = float.MaxValue;
+        }
     }
 
     public void Save()
@@ -51,6 +61,8 @@ public class SaveManager
             {
                 Debug.Log(e);
             }
+
+            Debug.Log("Saved: " + jsonSaveData);
         }
     }
 
@@ -63,7 +75,7 @@ public class SaveManager
                 using(StreamReader sr = new StreamReader(fs))
                 {
                     string result = sr.ReadToEnd();
-                    Debug.Log(result);
+                    Debug.Log("Loaded: " + result);
 
                     saveData = JsonUtility.FromJson<SaveData>(result);
                 }
@@ -73,5 +85,10 @@ public class SaveManager
         {
             Debug.Log(e);
         }
+    }
+
+    public void ResetSaveData()
+    {
+        saveData.quickestShoutTime = float.MaxValue;
     }
 }
