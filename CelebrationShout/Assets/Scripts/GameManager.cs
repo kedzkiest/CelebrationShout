@@ -52,21 +52,34 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private new void Awake()
     {
+        InitializeOnce();
+        Initialize();
+    }
+
+    /// <summary>
+    /// Initialization performed only once at the beginning of the game.
+    /// </summary>
+    private void InitializeOnce()
+    {
+        // Set UI instances
         titleUI = FindObjectOfType<TitleUI>();
         inGameUI = FindObjectOfType<InGameUI>();
         resultUI = FindObjectOfType<ResultUI>();
 
-        Initialize();
-
+        // Subscribe user input events
         userInputHandler.OnSpaceKeyPressed += OnSpaceKeyPressed;
         userInputHandler.OnBKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnNKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnMKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnEscapeKeyPressed += ResetGame;
+
+        // Initialize Sound
+        SoundPlayer.Instance.Initialize();
     }
 
     /// <summary>
     /// Set game state and UI to initial ones.
+    /// May be executed multiple times.
     /// </summary>
     private void Initialize()
     {
@@ -122,8 +135,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         currentGameState = GameState.WAITING_ANNOUNCE;
 
         Debug.Log("Preparation Start");
+        SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.DRUM_ROLL);
         yield return new WaitForSeconds(1);
         Debug.Log("Preparation Finish");
+        SoundPlayer.Instance.Stop();
+        SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.DRUM_ROLL_FINISH);
 
         currentGameState = GameState.AFTER_ANNOUNCE;
         Debug.Log("Waiting for player input...");
@@ -131,27 +147,43 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void OnShoutKeyPressed(ShoutType _shoutType)
     {
+        if(_shoutType == ShoutType.HAPPY_BIRTHDAY)
+        {
+            shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_BIRTHDAY);
+        }
+        else if(_shoutType == ShoutType.HAPPY_NEW_YEAR)
+        {
+            shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_NEW_YEAR);
+        }
+        else
+        {
+            shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.MERRY_CHRISTMAS);
+        }
+
         if (currentGameState == GameState.AFTER_ANNOUNCE)
         {
             StartCoroutine(ForceShout(correctShoutType == _shoutType));
         }
     }
 
+    float shoutTime;
     private IEnumerator ForceShout(bool _isCorrectAnswer)
     {
         currentGameState = GameState.PLAYER_SHOUTING;
 
         Debug.Log("Player starts shouting");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(shoutTime);
         Debug.Log("Player finishes shouting");
 
         if(_isCorrectAnswer)
         {
             Debug.Log("Correct");
+            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.CORRECT_SHOUT);
         }
         else
         {
             Debug.Log("Wrong");
+            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.WRONG_SHOUT);
         }
 
         StartCoroutine(ShowResponse());
