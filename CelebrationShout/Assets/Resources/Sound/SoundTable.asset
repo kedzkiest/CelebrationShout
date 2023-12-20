@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundNameList: 00000000010000000200000003000000040000000500000006000000
   audioClipList:
-  - {fileID: 8300000, guid: b8b7e440681cab34eb150265fe628802, type: 3}
-  - {fileID: 8300000, guid: 192d356341c26db489941c660edef6ba, type: 3}
+  - {fileID: 8300000, guid: 5eea0d69b585c4d439b15c0c70dac003, type: 3}
+  - {fileID: 8300000, guid: 82a5a242ff68c954480b22ec55553e30, type: 3}
   - {fileID: 8300000, guid: 43ca091c94858ce4f9300c8e66010c1f, type: 3}
   - {fileID: 8300000, guid: f68123e23075cb24d868ba41a0f957a7, type: 3}
   - {fileID: 8300000, guid: b8b7e440681cab34eb150265fe628802, type: 3}

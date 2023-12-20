@@ -259,4 +259,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         StopAllCoroutines();
         Initialize();
     }
+
+    /// <summary>
+    /// Save some data when game terminates
+    /// </summary>
+    private void OnDestroy()
+    {
+        
+    }
 }
