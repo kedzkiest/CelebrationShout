@@ -133,13 +133,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         StartCoroutine(WaitBeforeAnnouncePreparation(1.0f));
     }
 
+    Coroutine announcePreparationCoroutine;
     private IEnumerator WaitBeforeAnnouncePreparation(float _seconds)
     {
         Debug.Log("Wait Start");
         yield return new WaitForSeconds(_seconds);
         Debug.Log("Wait Finish");
 
-        StartCoroutine(DoAnnouncePreparation());
+        announcePreparationCoroutine = StartCoroutine(DoAnnouncePreparation());
     }
 
     private IEnumerator DoAnnouncePreparation()
@@ -157,8 +158,22 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log("Waiting for player input...");
     }
 
+    /// <summary>
+    /// How much time player shout last.
+    /// Used for adjusting judge timing
+    /// </summary>
+    float shoutTime;
     private void OnShoutKeyPressed(ShoutType _shoutType)
     {
+        bool cannotShout =
+            currentGameState == GameState.INGAME_INITIAL ||
+            currentGameState == GameState.PLAYER_SHOUTING ||
+            currentGameState == GameState.SHOW_RESPONSE ||
+            currentGameState == GameState.RESULT;
+
+        if (cannotShout) return;
+
+        // Play SE
         if(_shoutType == ShoutType.HAPPY_BIRTHDAY)
         {
             shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_BIRTHDAY);
@@ -172,13 +187,30 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             shoutTime = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.MERRY_CHRISTMAS);
         }
 
+        // Progress game sequence (penalty sequence)
+        if (currentGameState == GameState.WAITING_ANNOUNCE)
+        {
+            StartCoroutine(WaitBeforePenalty(shoutTime));
+
+            StartCoroutine(ForceShout(false));
+        }
+
+        // Progress game sequence (normal sequence)
         if (currentGameState == GameState.AFTER_ANNOUNCE)
         {
             StartCoroutine(ForceShout(correctShoutType == _shoutType));
         }
     }
 
-    float shoutTime;
+    private IEnumerator WaitBeforePenalty(float _seconds)
+    {
+        StopCoroutine(announcePreparationCoroutine);
+
+        yield return new WaitForSeconds(_seconds);
+
+        SoundPlayer.Instance.Stop();
+    }
+
     private IEnumerator ForceShout(bool _isCorrectAnswer)
     {
         currentGameState = GameState.PLAYER_SHOUTING;
@@ -223,6 +255,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void ResetGame()
     {
+        SoundPlayer.Instance.Stop();
         StopAllCoroutines();
         Initialize();
     }
