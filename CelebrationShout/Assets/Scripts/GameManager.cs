@@ -13,8 +13,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SHOW_RESPONSE,      // View showing the response from surroudings against the shout
         RESULT              // View showing success/failure result
     }
+    private GameState currentGameState;
 
-    public GameState currentGameState { get; private set; }
+    public enum ShoutType
+    {
+        HAPPY_BIRTHDAY,
+        HAPPY_NEW_YEAR,
+        MERRY_CHRISTMAS
+    }
+    private ShoutType correctShoutType;
 
     /// <summary>
     /// The instance of UI containing title elements.
@@ -52,9 +59,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Initialize();
 
         userInputHandler.OnSpaceKeyPressed += OnSpaceKeyPressed;
-        userInputHandler.OnBKeyPressed += ForceHappyBirthdayShout;
-        userInputHandler.OnNKeyPressed += ForceHappyNewYearShout;
-        userInputHandler.OnMKeyPressed += ForceMerryChristmasShout;
+        userInputHandler.OnBKeyPressed += OnShoutKeyPressed;
+        userInputHandler.OnNKeyPressed += OnShoutKeyPressed;
+        userInputHandler.OnMKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnEscapeKeyPressed += ResetGame;
     }
 
@@ -95,6 +102,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void StartGame()
     {
         currentGameState = GameState.INGAME_INITIAL;
+        correctShoutType = (ShoutType)Random.Range(0, System.Enum.GetValues(typeof(ShoutType)).Length);
+        Debug.Log("correctShoutType: " + correctShoutType);
 
         StartCoroutine(WaitBeforeAnnouncePreparation(1.0f));
     }
@@ -120,37 +129,30 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log("Waiting for player input...");
     }
 
-    private void ForceHappyBirthdayShout()
+    private void OnShoutKeyPressed(ShoutType _shoutType)
     {
         if (currentGameState == GameState.AFTER_ANNOUNCE)
         {
-            StartCoroutine(ForceShout());
+            StartCoroutine(ForceShout(correctShoutType == _shoutType));
         }
     }
 
-    private void ForceHappyNewYearShout()
-    {
-        if (currentGameState == GameState.AFTER_ANNOUNCE)
-        {
-            StartCoroutine(ForceShout());
-        }
-    }
-
-    private void ForceMerryChristmasShout()
-    {
-        if (currentGameState == GameState.AFTER_ANNOUNCE)
-        {
-            StartCoroutine(ForceShout());
-        }
-    }
-
-    private IEnumerator ForceShout()
+    private IEnumerator ForceShout(bool _isCorrectAnswer)
     {
         currentGameState = GameState.PLAYER_SHOUTING;
 
         Debug.Log("Player starts shouting");
         yield return new WaitForSeconds(1);
         Debug.Log("Player finishes shouting");
+
+        if(_isCorrectAnswer)
+        {
+            Debug.Log("Correct");
+        }
+        else
+        {
+            Debug.Log("Wrong");
+        }
 
         StartCoroutine(ShowResponse());
     }
@@ -177,6 +179,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void ResetGame()
     {
+        StopAllCoroutines();
         Initialize();
     }
 }

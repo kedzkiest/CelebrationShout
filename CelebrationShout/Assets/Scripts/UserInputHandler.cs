@@ -13,19 +13,19 @@ public class UserInputHandler : MonoBehaviour
     /// Notify the subscribers that B key was pressed.
     /// The event to say Happy Birthday.
     /// </summary>
-    public event Action OnBKeyPressed = () => { };
+    public event Action<GameManager.ShoutType> OnBKeyPressed = (_shoutType) => { };
 
     /// <summary>
     /// Notify the subscribers that space key was pressed.
     /// The event to say Happy New Year.
     /// </summary>
-    public event Action OnNKeyPressed = () => { };
+    public event Action<GameManager.ShoutType> OnNKeyPressed = (_shoutType) => { };
 
     /// <summary>
     /// Notify the subscribers that space key was pressed.
     /// The event to say Merry Christmas.
     /// </summary>
-    public event Action OnMKeyPressed = () => { };
+    public event Action<GameManager.ShoutType> OnMKeyPressed = (_shoutType) => { };
 
     /// <summary>
     /// Notify the subscribers that space key was pressed.
@@ -43,17 +43,17 @@ public class UserInputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            OnBKeyPressed();
+            OnBKeyPressed(GameManager.ShoutType.HAPPY_BIRTHDAY);
         }
 
         if (Input.GetKeyDown(KeyCode.N))
         {
-            OnNKeyPressed();
+            OnNKeyPressed(GameManager.ShoutType.HAPPY_NEW_YEAR);
         }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            OnMKeyPressed();
+            OnMKeyPressed(GameManager.ShoutType.MERRY_CHRISTMAS);
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
