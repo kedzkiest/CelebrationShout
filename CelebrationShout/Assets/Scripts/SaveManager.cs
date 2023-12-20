@@ -37,13 +37,6 @@ public class SaveManager
     {
         saveData = new SaveData();
         Load();
-
-        // Since float value is initialized to 0.0f, Change the initial value to
-        // float.MaxValue so that players can update the best score.
-        if(saveData.quickestShoutTime <= 0.0f)
-        {
-            saveData.quickestShoutTime = float.MaxValue;
-        }
     }
 
     public void Save()
@@ -78,6 +71,13 @@ public class SaveManager
                     Debug.Log("Loaded: " + result);
 
                     saveData = JsonUtility.FromJson<SaveData>(result);
+
+                    // Since float value is initialized to 0.0f, Change the initial value to
+                    // float.MaxValue so that players can update the best score.
+                    if (saveData.quickestShoutTime <= 0.0f)
+                    {
+                        saveData.quickestShoutTime = float.MaxValue;
+                    }
                 }
             }
         }

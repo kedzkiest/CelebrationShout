@@ -26,13 +26,18 @@ public class TitleUI : MonoBehaviour, ISceneUI
     /// A view of the best score that player have ever got in ingame.
     /// </summary>
     [SerializeField]
-    private TextMeshProUGUI bestScore;
+    private BestScore bestScore;
+
+    public void Initialize()
+    {
+        bestScore.Initialize();
+    }
 
     public void SetVisible(bool _isVisible)
     {
         title.enabled = _isVisible;
         instruction.enabled = _isVisible;
         guideToNext.enabled = _isVisible;
-        bestScore.enabled = _isVisible;
+        bestScore.SetVisible(_isVisible);
     }
 }

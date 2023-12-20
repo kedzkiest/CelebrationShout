@@ -1,16 +1,35 @@
+using TMPro;
 using UnityEngine;
 
 public class BestScore : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private TextMeshProUGUI bestScore;
+
+    public void Initialize()
     {
-        
+        UpdateView();
+
+        GameManager.Instance.OnBestScoreUpdated += UpdateView;
+        GameManager.Instance.OnGameReset += UpdateView;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetVisible(bool _isVisible)
     {
+        bestScore.enabled = _isVisible;
+    }
+
+    private void UpdateView()
+    {
+        float quickestShoutTime = SaveManager.Instance.GetQuickestShoutTime();
         
+        if(quickestShoutTime >= float.MaxValue)
+        {
+            bestScore.text = "Best Score:";
+        }
+        else
+        {
+            bestScore.text = "Best Score: " + SaveManager.Instance.GetQuickestShoutTime().ToString(".00") + "s";
+        }
     }
 }

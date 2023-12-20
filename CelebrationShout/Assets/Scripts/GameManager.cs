@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -73,8 +74,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// </summary>
     private void InitializeOnce()
     {
+        // Initialie savedata
+        SaveManager.Instance.Initialize();
+
+        // Initialize Sound
+        SoundPlayer.Instance.Initialize();
+
         // Set UI instances
         titleUI = FindObjectOfType<TitleUI>();
+        titleUI.Initialize();
+
         inGameUI = FindObjectOfType<InGameUI>();
         resultUI = FindObjectOfType<ResultUI>();
 
@@ -83,13 +92,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         userInputHandler.OnBKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnNKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnMKeyPressed += OnShoutKeyPressed;
-        userInputHandler.OnEscapeKeyPressed += ResetGame;
-
-        // Initialize Sound
-        SoundPlayer.Instance.Initialize();
-
-        // Initialie savedata
-        SaveManager.Instance.Initialize();
+        userInputHandler.OnEscapeKeyPressed += ResetGame;    
     }
 
     /// <summary>
@@ -130,7 +133,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void StartGame()
     {
         currentGameState = GameState.INGAME_INITIAL;
-        correctShoutType = (ShoutType)Random.Range(0, System.Enum.GetValues(typeof(ShoutType)).Length);
+        correctShoutType = (ShoutType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(ShoutType)).Length);
         Debug.Log("correctShoutType: " + correctShoutType);
 
         StartCoroutine(WaitBeforeAnnouncePreparation(1.0f));
@@ -156,7 +159,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         Debug.Log("Preparation Start");
         SoundPlayer.Instance.Play(SoundTable.SoundName.DRUM_ROLL);
-        yield return new WaitForSeconds(Random.Range(minPreparationTime, maxPreparationTime));
+        yield return new WaitForSeconds(UnityEngine.Random.Range(minPreparationTime, maxPreparationTime));
         Debug.Log("Preparation Finish");
         announceTime = Time.time;
         Debug.Log(announceTime);
@@ -224,6 +227,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// The game time when a correct answer by player was made.
     /// </summary>
     float correctAnswerTime;
+    public event Action OnBestScoreUpdated = () => { };
     private IEnumerator ForceShout(bool _isCorrectAnswer)
     {
         currentGameState = GameState.PLAYER_SHOUTING;
@@ -243,6 +247,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             if (shoutTime < SaveManager.Instance.GetQuickestShoutTime())
             {
                 SaveManager.Instance.SetQuickestShoutTime(shoutTime);
+                OnBestScoreUpdated();
             }
         }
         else
@@ -274,10 +279,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         resultUI.SetVisible(true);
     }
 
+    public event Action OnGameReset = () => { };
     private void ResetGame()
     {
+        if (currentGameState == GameState.TITLE)
+        {
+            SaveManager.Instance.ResetSaveData();
+            OnGameReset();
+        }
+
         SoundPlayer.Instance.Stop();
-        SaveManager.Instance.ResetSaveData();
         StopAllCoroutines();
         Initialize();
     }
