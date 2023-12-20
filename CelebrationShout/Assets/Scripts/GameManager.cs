@@ -46,8 +46,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private new void Awake()
     {
         titleUI = FindObjectOfType<TitleUI>();
-        //inGameUI = FindObjectOfType<InGameUI>();
-        //resultUI = FindObjectOfType<ResultUI>();
+        inGameUI = FindObjectOfType<InGameUI>();
+        resultUI = FindObjectOfType<ResultUI>();
 
         Initialize();
 
@@ -66,8 +66,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         currentGameState = GameState.TITLE;
 
         titleUI.SetVisible(true);
-        //inGameUI.SetVisible(false);
-        //resultUI.SetVisible(false);
+        inGameUI.SetVisible(false);
+        resultUI.SetVisible(false);
     }
 
     /// <summary>
@@ -171,8 +171,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log("Result");
         currentGameState = GameState.RESULT;
 
-        //inGameUI.SetVisible(false);
-        //resultUI.SetVisible(true);
+        inGameUI.SetVisible(false);
+        resultUI.SetVisible(true);
     }
 
     private void ResetGame()
