@@ -50,6 +50,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField]
     private UserInputHandler userInputHandler;
 
+    /// <summary>
+    /// Minimun time from the start of counting until the answer model appears.
+    /// </summary>
+    [SerializeField]
+    private float minPreparationTime;
+
+    /// <summary>
+    /// Maximun time from the start of counting until the answer model appears.
+    /// </summary>
+    [SerializeField]
+    private float maxPreparationTime;
+
     private new void Awake()
     {
         InitializeOnce();
@@ -135,8 +147,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         currentGameState = GameState.WAITING_ANNOUNCE;
 
         Debug.Log("Preparation Start");
-        SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.DRUM_ROLL);
-        yield return new WaitForSeconds(1);
+        SoundPlayer.Instance.Play(SoundTable.SoundName.DRUM_ROLL);
+        yield return new WaitForSeconds(Random.Range(minPreparationTime, maxPreparationTime));
         Debug.Log("Preparation Finish");
         SoundPlayer.Instance.Stop();
         SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.DRUM_ROLL_FINISH);
