@@ -9,9 +9,6 @@ public class BestScore : MonoBehaviour
     public void Initialize()
     {
         UpdateView();
-
-        GameManager.Instance.OnBestScoreUpdated += UpdateView;
-        GameManager.Instance.OnGameReset += UpdateView;
     }
 
     public void SetVisible(bool _isVisible)
@@ -19,7 +16,7 @@ public class BestScore : MonoBehaviour
         bestScore.enabled = _isVisible;
     }
 
-    private void UpdateView()
+    public void UpdateView()
     {
         float quickestShoutTime = SaveManager.Instance.GetQuickestShoutTime();
         

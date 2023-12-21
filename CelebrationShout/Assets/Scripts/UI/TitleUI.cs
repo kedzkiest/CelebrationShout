@@ -40,4 +40,9 @@ public class TitleUI : MonoBehaviour
         guideToNext.enabled = _isVisible;
         bestScore.SetVisible(_isVisible);
     }
+
+    public void UpdateBestScore()
+    {
+        bestScore.UpdateView();
+    }
 }

@@ -50,6 +50,8 @@ public class UIManager
         GameManager.Instance.OnGameRestart += OnGameRestart;
         GameManager.Instance.OnResultEnter += OnResultEnter;
         GameManager.Instance.OnBackTitle += OnBackTitle;
+        GameManager.Instance.OnBestScoreUpdated += UpdateBestScore;
+        GameManager.Instance.OnGameReset += UpdateBestScore;
 
         titleUI.Initialize();
     }
@@ -89,5 +91,10 @@ public class UIManager
         titleUI.SetVisible(true);
         inGameUI.SetVisible(false);
         resultUI.SetVisible(false);
+    }
+
+    private void UpdateBestScore()
+    {
+        titleUI.UpdateBestScore();
     }
 }

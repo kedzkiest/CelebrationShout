@@ -1436,9 +1436,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instructionTextList:
+  - {fileID: 672525377}
   - {fileID: 1883861334}
   - {fileID: 2084332341}
+  - {fileID: 253553648}
   - {fileID: 629129079}
+  - {fileID: 1717388422}
   keycapIconList:
   - {fileID: 1560920891}
   - {fileID: 778945535}
@@ -2155,7 +2158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 1308807893}
-  instruction: {fileID: 0}
+  instruction: {fileID: 1602545545}
   guideToNext: {fileID: 622251782}
   bestScore: {fileID: 1102120035}
 --- !u!1 &1954605684
