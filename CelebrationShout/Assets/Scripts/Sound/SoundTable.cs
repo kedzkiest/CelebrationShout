@@ -7,6 +7,7 @@ public class SoundTable : ScriptableObject
 {
     public enum SoundName
     {
+        TRANSITION_BUZZER,  // The sound when a transition is made
         HAPPY_BIRTHDAY,     // The voice says "Happy birthday!"
         HAPPY_NEW_YEAR,     // The voice says "Happy new year!"
         MERRY_CHRISTMAS,    // The voice says "Merry christmas!"

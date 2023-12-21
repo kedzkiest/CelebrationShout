@@ -1,13 +1,16 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class InGameUI : MonoBehaviour, ISceneUI
+public class InGameUI : MonoBehaviour
 {
+    /// <summary>
+    /// The background image of title.
+    /// </summary>
     [SerializeField]
-    private TextMeshProUGUI text;
+    private Image background;
 
     public void SetVisible(bool _isVisible)
     {
-        text.enabled = _isVisible;
+        background.enabled = _isVisible;
     }
 }
