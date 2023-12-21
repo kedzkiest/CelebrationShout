@@ -48,7 +48,6 @@ public class StageManager
 
     private void SetupStageBeforeAnnouncement(GameManager.GameState _nextState)
     {
-        Debug.LogWarning("called. next state: " + _nextState);
         character.WearHat(false);
         happyBirthdayStage.gameObject.SetActive(false);
         happyNewYearStage.gameObject.SetActive(false);

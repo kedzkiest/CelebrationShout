@@ -62,9 +62,10 @@ public class UIManager
         GameManager.Instance.OnResultEnter += OnResultEnter;
         GameManager.Instance.OnBackTitle += OnBackTitle;
         GameManager.Instance.OnBestScoreUpdated += UpdateBestScore;
-        GameManager.Instance.OnGameReset += UpdateBestScore;
+        GameManager.Instance.OnGameReset += OnGameReset;
 
         titleUI.Initialize();
+        resultUI.Initialize();
         transitionAnimation.Initialize();
 
         transitionAnimation.OnTransitionProgress += OnTransitionProgress;
@@ -119,6 +120,10 @@ public class UIManager
         resultUI.SetVisible(false);
     }
 
+    private void OnGameReset()
+    {
+        OnTransition(GameManager.GameState.TITLE, UpdateBestScore);
+    }
     private void UpdateBestScore()
     {
         titleUI.UpdateBestScore();
