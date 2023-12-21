@@ -13,7 +13,7 @@ public class TitleUI : MonoBehaviour
     /// A brief explanation on how to play the game.
     /// </summary>
     [SerializeField]
-    private TextMeshProUGUI instruction;
+    private PlayInstruction instruction;
 
     /// <summary>
     /// A guide shows the step to next sequence.
@@ -36,7 +36,7 @@ public class TitleUI : MonoBehaviour
     public void SetVisible(bool _isVisible)
     {
         title.enabled = _isVisible;
-        instruction.enabled = _isVisible;
+        instruction.SetVisible(_isVisible);
         guideToNext.enabled = _isVisible;
         bestScore.SetVisible(_isVisible);
     }
