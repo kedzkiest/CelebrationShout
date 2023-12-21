@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +10,12 @@ public class InGameUI : MonoBehaviour
     [SerializeField]
     private Image background;
 
+    [SerializeField]
+    private TextMeshProUGUI text;
+
     public void SetVisible(bool _isVisible)
     {
         background.enabled = _isVisible;
+        text.enabled = _isVisible;
     }
 }
