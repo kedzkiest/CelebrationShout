@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class ResultUI : MonoBehaviour, ISceneUI
+public class ResultUI : MonoBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI text;

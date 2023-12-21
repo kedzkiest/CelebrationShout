@@ -25,27 +25,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private ShoutType correctShoutType;
 
     /// <summary>
-    /// The instance of UI containing title elements.
-    /// For example, title, instruction, best score, ...
-    /// </summary>
-    [SerializeField]
-    private ISceneUI titleUI;
-
-    /// <summary>
-    /// The instance of UI containing ingame elements.
-    /// For example, focus effect, speech bubble, ...
-    /// </summary>
-    [SerializeField]
-    private ISceneUI inGameUI;
-
-    /// <summary>
-    /// The instance of UI containing result elements.
-    /// For example, response time, flavor text, ...
-    /// </summary>
-    [SerializeField]
-    private ISceneUI resultUI;
-
-    /// <summary>
     /// The instance that receives inputs from user and publishes them as events.
     /// </summary>
     [SerializeField]
@@ -80,19 +59,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // Initialize Sound
         SoundPlayer.Instance.Initialize();
 
-        // Set UI instances
-        titleUI = FindObjectOfType<TitleUI>();
-        titleUI.Initialize();
-
-        inGameUI = FindObjectOfType<InGameUI>();
-        resultUI = FindObjectOfType<ResultUI>();
+        // Initialize UI
+        TitleUI titleUI = titleUI = FindObjectOfType<TitleUI>();
+        InGameUI inGameUI = FindObjectOfType<InGameUI>();
+        ResultUI resultUI = FindObjectOfType<ResultUI>();
+        UIManager.Instance.Initialize(titleUI, inGameUI, resultUI);
 
         // Subscribe user input events
         userInputHandler.OnSpaceKeyPressed += OnSpaceKeyPressed;
         userInputHandler.OnBKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnNKeyPressed += OnShoutKeyPressed;
         userInputHandler.OnMKeyPressed += OnShoutKeyPressed;
-        userInputHandler.OnEscapeKeyPressed += ResetGame;    
+        userInputHandler.OnEscapeKeyPressed += OnEscapeKeyPressed;
     }
 
     /// <summary>
@@ -102,31 +80,28 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private void Initialize()
     {
         currentGameState = GameState.TITLE;
-
-        titleUI.SetVisible(true);
-        inGameUI.SetVisible(false);
-        resultUI.SetVisible(false);
     }
 
+
+    public event Action OnGameStart = () => { };
+    public event Action OnGameRestart = () => { };
     /// <summary>
     /// Start the game from TITLE and RESULT sequence.
     /// </summary>
     private void OnSpaceKeyPressed()
     {
-        if(currentGameState == GameState.TITLE)
+        if (currentGameState == GameState.TITLE)
         {
-            inGameUI.SetVisible(true);
-            titleUI.SetVisible(false);
-
             StartGame();
+
+            OnGameStart();
         }
 
-        if(currentGameState == GameState.RESULT)
+        if (currentGameState == GameState.RESULT)
         {
-            inGameUI.SetVisible(true);
-            resultUI.SetVisible(false);
-
             StartGame();
+
+            OnGameRestart();
         }
     }
 
@@ -186,11 +161,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (cannotShout) return;
 
         // Play SE
-        if(_shoutType == ShoutType.HAPPY_BIRTHDAY)
+        if (_shoutType == ShoutType.HAPPY_BIRTHDAY)
         {
             shoutDuration = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_BIRTHDAY);
         }
-        else if(_shoutType == ShoutType.HAPPY_NEW_YEAR)
+        else if (_shoutType == ShoutType.HAPPY_NEW_YEAR)
         {
             shoutDuration = SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.HAPPY_NEW_YEAR);
         }
@@ -237,7 +212,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         yield return new WaitForSeconds(shoutDuration);
         Debug.Log("Player finishes shouting");
 
-        if(_isCorrectAnswer)
+        if (_isCorrectAnswer)
         {
             Debug.Log("Correct");
             SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.CORRECT_SHOUT);
@@ -270,19 +245,22 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         ShowResult();
     }
 
+    public event Action OnResultEnter = () => { };
     private void ShowResult()
     {
+        OnResultEnter();
+
         Debug.Log("Result");
         currentGameState = GameState.RESULT;
-
-        inGameUI.SetVisible(false);
-        resultUI.SetVisible(true);
     }
 
+    public event Action OnBackTitle = () => { };
     public event Action OnGameReset = () => { };
-    private void ResetGame()
+    private void OnEscapeKeyPressed()
     {
-        if (currentGameState == GameState.TITLE)
+        OnBackTitle();
+
+        if(currentGameState == GameState.TITLE)
         {
             SaveManager.Instance.ResetSaveData();
             OnGameReset();

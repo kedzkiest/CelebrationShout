@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class TitleUI : MonoBehaviour, ISceneUI
+public class TitleUI : MonoBehaviour
 {
     /// <summary>
     /// The title of the game.
