@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class UIManager
 {
     // Make this class Singleton
