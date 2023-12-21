@@ -72,6 +72,11 @@ public class SaveManager
 
                     saveData = JsonUtility.FromJson<SaveData>(result);
 
+                    if(result == "")
+                    {
+                        Debug.Log("No data loaded. New one created.");
+                    }
+
                     // Since float value is initialized to 0.0f, Change the initial value to
                     // float.MaxValue so that players can update the best score.
                     if (saveData.quickestShoutTime <= 0.0f)
@@ -84,6 +89,12 @@ public class SaveManager
         catch(Exception e)
         {
             Debug.Log(e);
+
+            // In the case read file is broken, newly create an instance of SaveData,
+            // then save it to file, then load it so that we can modify its content later (normal system).
+            saveData = new SaveData();
+            Save();
+            Load();
         }
     }
 
