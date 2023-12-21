@@ -65,6 +65,7 @@ public class UIManager
         GameManager.Instance.OnGameReset += UpdateBestScore;
 
         titleUI.Initialize();
+        resultUI.Initialize();
         transitionAnimation.Initialize();
 
         transitionAnimation.OnTransitionProgress += OnTransitionProgress;

@@ -216,6 +216,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// </summary>
     float correctAnswerTime;
     public event Action OnBestScoreUpdated = () => { };
+    public event Action<bool, float> OnShoutEnd = (_isWrongShout, _shoutTime) => { };
     private IEnumerator ForceShout(bool _isCorrectAnswer)
     {
         currentGameState = GameState.PLAYER_SHOUTING;
@@ -225,13 +226,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         yield return new WaitForSeconds(shoutDuration);
         Debug.Log("Player finishes shouting");
 
+        float shoutTime = 0.0f;
+
         if (_isCorrectAnswer)
         {
             Debug.Log("Correct");
             SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.CORRECT_SHOUT);
 
             // update best score
-            float shoutTime = correctAnswerTime - announceTime;
+            shoutTime = correctAnswerTime - announceTime;
             if (shoutTime < SaveManager.Instance.GetQuickestShoutTime())
             {
                 SaveManager.Instance.SetQuickestShoutTime(shoutTime);
@@ -243,6 +246,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             Debug.Log("Wrong");
             SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.WRONG_SHOUT);
         }
+
+        OnShoutEnd(!_isCorrectAnswer, shoutTime);
 
         StartCoroutine(ShowResponse());
     }
