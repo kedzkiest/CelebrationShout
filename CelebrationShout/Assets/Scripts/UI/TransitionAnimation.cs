@@ -16,7 +16,7 @@ public class TransitionAnimation : MonoBehaviour
     /// </summary>
     private float transitionDuration;
 
-    const string TransitionAnimationClipPath = "Animations/TransitionAnimation";
+    const string TRANSITION_ANIMATION_CLIP_PATH = "Animations/TransitionAnimation";
 
     /// <summary>
     /// The game state after a transition is made.
@@ -31,13 +31,13 @@ public class TransitionAnimation : MonoBehaviour
 
     public void Initialize()
     {
-        AnimationClip clip = (AnimationClip)(Resources.Load(TransitionAnimationClipPath));
+        AnimationClip clip = (AnimationClip)(Resources.Load(TRANSITION_ANIMATION_CLIP_PATH));
         transitionDuration = clip.length;
 
         UIManager.Instance.OnTransition += Invoke;
     }
 
-    public void Invoke(GameManager.GameState _nextState, Action _onTransitionComplete)
+    private void Invoke(GameManager.GameState _nextState, Action _onTransitionComplete)
     {
         nextState = _nextState;
 
@@ -59,12 +59,15 @@ public class TransitionAnimation : MonoBehaviour
         transitionAnimator.enabled = false;
     }
 
+    public event Action<GameManager.GameState> OnTransitionProgress = (_nextState) => { };
     /// <summary>
     /// The process executed during the transition.
     /// Caller is the animation event of transition animation.
     /// </summary>
     public void OnBackgroundUpdate()
     {
+        OnTransitionProgress(nextState);
+
         onBackGroundUpdate.Invoke();
     }
 

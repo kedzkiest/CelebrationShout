@@ -23,7 +23,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         HAPPY_NEW_YEAR,
         MERRY_CHRISTMAS
     }
-    private ShoutType correctShoutType;
+    public ShoutType correctShoutType { get; private set; }
 
     /// <summary>
     /// The instance that receives inputs from user and publishes them as events.
@@ -56,8 +56,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // Initialie savedata
         SaveManager.Instance.Initialize();
 
-        // Initialize Sound
+        // Initialize sound
         SoundPlayer.Instance.Initialize();
+
+        // Initialzie stage
+        GameObject character = FindObjectOfType<Mia>().gameObject;
+        HappyBirthdayStage hbStage = FindObjectOfType<HappyBirthdayStage>();
+        HappyNewYearStage hnyStage = FindObjectOfType<HappyNewYearStage>();
+        MerryChristmasStage mcStage = FindObjectOfType<MerryChristmasStage>();
+        StageManager.Instance.Initialize(character, hbStage, hnyStage, mcStage);
 
         // Initialize UI
         TitleUI titleUI = titleUI = FindObjectOfType<TitleUI>();
@@ -126,6 +133,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         announcePreparationCoroutine = StartCoroutine(DoAnnouncePreparation());
     }
 
+
+    public event Action OnAnnounceMade = () => { };
     /// <summary>
     /// The game time when a celebration announce was made.
     /// </summary>
@@ -142,6 +151,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log(announceTime);
         SoundPlayer.Instance.Stop();
         SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.DRUM_ROLL_FINISH);
+
+        OnAnnounceMade();
 
         currentGameState = GameState.AFTER_ANNOUNCE;
         Debug.Log("Waiting for player input...");
