@@ -1,3 +1,7 @@
+using System;
+using System.Collections;
+using UnityEngine;
+
 public class UIManager
 {
     // Make this class Singleton
@@ -33,7 +37,13 @@ public class UIManager
     /// </summary>
     private ResultUI resultUI;
 
-    public void Initialize(TitleUI _titleUI, InGameUI _inGameUI, ResultUI _resultUI)
+    /// <summary>
+    /// The event for starting a transition animation.
+    /// Receiver conditions following processes by _nextState, and executes _onTransitionComplete function during transition.
+    /// </summary>
+    public event Action<GameManager.GameState, Action> OnTransition = (_nextState, _onTransitionComplete) => { };
+
+    public void Initialize(TitleUI _titleUI, InGameUI _inGameUI, ResultUI _resultUI, TransitionAnimation _transitionAnimation)
     {
         // Set UI instances
         titleUI = _titleUI;
@@ -54,12 +64,17 @@ public class UIManager
         GameManager.Instance.OnGameReset += UpdateBestScore;
 
         titleUI.Initialize();
+        _transitionAnimation.Initialize();
     }
 
     /// <summary>
     /// TITLE -> INGAME_INITIAL
     /// </summary>
     private void OnGameStart()
+    {
+        OnTransition(GameManager.GameState.INGAME_INITIAL, SetVisibilityOnGameStart);
+    }
+    private void SetVisibilityOnGameStart()
     {
         titleUI.SetVisible(false);
         inGameUI.SetVisible(true);
@@ -69,6 +84,10 @@ public class UIManager
     /// RESULT -> INGAME_INITIAL
     /// </summary>
     private void OnGameRestart()
+    {
+        OnTransition(GameManager.GameState.INGAME_INITIAL, SetVisibilityOnGameRestart);
+    }
+    private void SetVisibilityOnGameRestart()
     {
         inGameUI.SetVisible(true);
         resultUI.SetVisible(false);
@@ -87,6 +106,10 @@ public class UIManager
     /// Any game state -> TITLE
     /// </summary>
     private void OnBackTitle()
+    {
+        OnTransition(GameManager.GameState.TITLE, SetVisibilityOnBackTitle);
+    }
+    private void SetVisibilityOnBackTitle()
     {
         titleUI.SetVisible(true);
         inGameUI.SetVisible(false);

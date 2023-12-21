@@ -63,7 +63,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         TitleUI titleUI = titleUI = FindObjectOfType<TitleUI>();
         InGameUI inGameUI = FindObjectOfType<InGameUI>();
         ResultUI resultUI = FindObjectOfType<ResultUI>();
-        UIManager.Instance.Initialize(titleUI, inGameUI, resultUI);
+        TransitionAnimation transitionAnimation = FindObjectOfType<TransitionAnimation>();
+        UIManager.Instance.Initialize(titleUI, inGameUI, resultUI, transitionAnimation);
 
         // Subscribe user input events
         userInputHandler.OnSpaceKeyPressed += OnSpaceKeyPressed;
@@ -110,7 +111,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         currentGameState = GameState.INGAME_INITIAL;
         correctShoutType = (ShoutType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(ShoutType)).Length);
         Debug.Log("correctShoutType: " + correctShoutType);
+    }
 
+    public void OnTransitionToInGameFinish()
+    {
         StartCoroutine(WaitBeforeAnnouncePreparation(1.0f));
     }
 
