@@ -35,6 +35,8 @@ public class UIManager
     /// </summary>
     private ResultUI resultUI;
 
+    private TransitionAnimation transitionAnimation;
+
     /// <summary>
     /// The event for starting a transition animation.
     /// Receiver conditions following processes by _nextState, and executes _onTransitionComplete function during transition.
@@ -47,6 +49,7 @@ public class UIManager
         titleUI = _titleUI;
         inGameUI = _inGameUI;
         resultUI = _resultUI;
+        transitionAnimation = _transitionAnimation;
 
         // Set initial UI state
         titleUI.SetVisible(true);
@@ -62,7 +65,9 @@ public class UIManager
         GameManager.Instance.OnGameReset += UpdateBestScore;
 
         titleUI.Initialize();
-        _transitionAnimation.Initialize();
+        transitionAnimation.Initialize();
+
+        transitionAnimation.OnTransitionProgress += OnTransitionProgress;
     }
 
     /// <summary>
@@ -117,5 +122,11 @@ public class UIManager
     private void UpdateBestScore()
     {
         titleUI.UpdateBestScore();
+    }
+
+    public event Action<GameManager.GameState> OnTransitionProgressEvent = (_nextState) => { };
+    private void OnTransitionProgress(GameManager.GameState _nextState)
+    {
+        OnTransitionProgressEvent(_nextState);
     }
 }

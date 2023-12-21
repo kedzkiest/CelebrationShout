@@ -59,12 +59,15 @@ public class TransitionAnimation : MonoBehaviour
         transitionAnimator.enabled = false;
     }
 
+    public event Action<GameManager.GameState> OnTransitionProgress = (_nextState) => { };
     /// <summary>
     /// The process executed during the transition.
     /// Caller is the animation event of transition animation.
     /// </summary>
     public void OnBackgroundUpdate()
     {
+        OnTransitionProgress(nextState);
+
         onBackGroundUpdate.Invoke();
     }
 
