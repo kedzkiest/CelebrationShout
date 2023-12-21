@@ -51,6 +51,7 @@ public class TransitionAnimation : MonoBehaviour
     {
         // Animator ignition is done by on/off animator component
         transitionAnimator.enabled = true;
+
         yield return new WaitForSeconds(transitionDuration);
 
         // Reset the animator state so that it can run again
@@ -80,7 +81,7 @@ public class TransitionAnimation : MonoBehaviour
 
         if(nextState == GameManager.GameState.TITLE)
         {
-            return;
+            GameManager.Instance.OnTransitionToTitleFinish();
         }
     }
 }

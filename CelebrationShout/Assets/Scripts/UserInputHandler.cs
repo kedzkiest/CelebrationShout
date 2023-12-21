@@ -33,6 +33,9 @@ public class UserInputHandler : MonoBehaviour
     /// </summary>
     public event Action OnEscapeKeyPressed = () => { };
 
+    const float ESCAPE_KEY_EVENT_COOLTIME = 3.0f;
+    private float elapsedTimeFromPreviousEscapeKeyPress;
+
     // Update is called once per frame
     void Update()
     {
@@ -56,9 +59,14 @@ public class UserInputHandler : MonoBehaviour
             OnMKeyPressed(GameManager.ShoutType.MERRY_CHRISTMAS);
         }
 
+        elapsedTimeFromPreviousEscapeKeyPress += Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            OnEscapeKeyPressed();
+            if (elapsedTimeFromPreviousEscapeKeyPress > ESCAPE_KEY_EVENT_COOLTIME)
+            {
+                elapsedTimeFromPreviousEscapeKeyPress = 0;
+                OnEscapeKeyPressed();
+            }
         }
     }
 }

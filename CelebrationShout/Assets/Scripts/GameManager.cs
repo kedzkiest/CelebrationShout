@@ -7,6 +7,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public enum GameState
     {
         TITLE,              // View showing the game title
+        IN_TRANSITION,      // View when a transition animation is under progress
         INGAME_INITIAL,     // View waiting for drum roll or something
         WAITING_ANNOUNCE,   // View showing the process before announcement
         AFTER_ANNOUNCE,     // View waiting for player's key input
@@ -44,14 +45,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private new void Awake()
     {
-        InitializeOnce();
         Initialize();
     }
 
     /// <summary>
     /// Initialization performed only once at the beginning of the game.
     /// </summary>
-    private void InitializeOnce()
+    private void Initialize()
     {
         // Initialie savedata
         SaveManager.Instance.Initialize();
@@ -74,16 +74,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         userInputHandler.OnEscapeKeyPressed += OnEscapeKeyPressed;
     }
 
-    /// <summary>
-    /// Set game state and UI to initial ones.
-    /// May be executed multiple times.
-    /// </summary>
-    private void Initialize()
-    {
-        currentGameState = GameState.TITLE;
-    }
-
-
     public event Action OnGameStart = () => { };
     public event Action OnGameRestart = () => { };
     /// <summary>
@@ -91,6 +81,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// </summary>
     private void OnSpaceKeyPressed()
     {
+        if (currentGameState == GameState.IN_TRANSITION) return;
+
         if (currentGameState == GameState.TITLE)
         {
             StartGame();
@@ -108,13 +100,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void StartGame()
     {
-        currentGameState = GameState.INGAME_INITIAL;
+        currentGameState = GameState.IN_TRANSITION;
         correctShoutType = (ShoutType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(ShoutType)).Length);
         Debug.Log("correctShoutType: " + correctShoutType);
+
+        SoundPlayer.Instance.Play(SoundTable.SoundName.TRANSITION_BUZZER);
     }
 
     public void OnTransitionToInGameFinish()
     {
+        SoundPlayer.Instance.Stop();
+
+        currentGameState = GameState.INGAME_INITIAL;
+
         StartCoroutine(WaitBeforeAnnouncePreparation(1.0f));
     }
 
@@ -262,6 +260,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public event Action OnGameReset = () => { };
     private void OnEscapeKeyPressed()
     {
+        if (currentGameState == GameState.IN_TRANSITION) return;
+
+        SoundPlayer.Instance.Play(SoundTable.SoundName.TRANSITION_BUZZER);
         OnBackTitle();
 
         if(currentGameState == GameState.TITLE)
@@ -270,9 +271,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             OnGameReset();
         }
 
-        SoundPlayer.Instance.Stop();
+        currentGameState = GameState.IN_TRANSITION;
+
         StopAllCoroutines();
-        Initialize();
+    }
+
+    public void OnTransitionToTitleFinish()
+    {
+        currentGameState = GameState.TITLE;
+        SoundPlayer.Instance.Stop();
     }
 
     /// <summary>
