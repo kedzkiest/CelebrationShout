@@ -20,7 +20,7 @@ public class TitleUI : MonoBehaviour
     /// The title of the game.
     /// </summary>
     [SerializeField]
-    private TextMeshProUGUI title;
+    private GameObject title;
 
     /// <summary>
     /// A brief explanation on how to play the game.
@@ -50,7 +50,7 @@ public class TitleUI : MonoBehaviour
     {
         background.enabled = _isVisible;
         panel.enabled = _isVisible;
-        title.enabled = _isVisible;
+        title.SetActive(_isVisible);
         instruction.SetVisible(_isVisible);
         guideToNext.enabled = _isVisible;
         bestScore.SetVisible(_isVisible);
