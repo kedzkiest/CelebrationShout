@@ -23,6 +23,11 @@ public class SoundTable : ScriptableObject
     [SerializeField]
     private List<AudioClip> audioClipList = new List<AudioClip>();
 
+    /// <summary>
+    /// Convert given SoundName to AudioClip, then return it.
+    /// </summary>
+    /// <param name="_soundName"></param>
+    /// <returns></returns>
     public AudioClip GetSoundClip(SoundName _soundName)
     {
         int index = soundNameList.IndexOf(_soundName);
