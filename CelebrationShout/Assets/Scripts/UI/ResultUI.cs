@@ -18,7 +18,10 @@ public class ResultUI : MonoBehaviour
     private Image panel;
 
     [SerializeField]
-    private TextMeshProUGUI score;
+    private TextMeshProUGUI score_real;
+
+    [SerializeField]
+    private TextMeshProUGUI score_fake;
 
     [SerializeField]
     private List<TextMeshProUGUI> guidesToNext = new List<TextMeshProUGUI>();
@@ -32,7 +35,8 @@ public class ResultUI : MonoBehaviour
     {
         background.enabled = _isVisible;
         panel.enabled = _isVisible;
-        score.enabled = _isVisible;
+        score_real.enabled = _isVisible;
+        score_fake.enabled = _isVisible;
 
         foreach(TextMeshProUGUI guide in guidesToNext)
         {
@@ -47,11 +51,11 @@ public class ResultUI : MonoBehaviour
         // in case player did wrong shout
         if(_isWrongShout)
         {
-            score.text = "You failed...";
+            score_real.text = "You failed...";
             return;
         }
 
         // in case player did correct shout
-        score.text = "You shouted in: " + _shoutTime.ToString(".00") + "s";
+        score_real.text = "You shouted in: " + _shoutTime.ToString("0.00") + "s";
     }
 }

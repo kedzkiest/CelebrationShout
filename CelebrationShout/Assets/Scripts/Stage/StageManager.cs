@@ -44,11 +44,13 @@ public class StageManager
 
         UIManager.Instance.OnTransitionProgressEvent += SetupStageBeforeAnnouncement;
         GameManager.Instance.OnAnnounceMade += SetupStageAfterAnnouncement;
+        GameManager.Instance.OnShoutEnd += SetupCharacterAfterShout;
     }
 
     private void SetupStageBeforeAnnouncement(GameManager.GameState _nextState)
     {
         character.WearHat(false);
+        character.FeelNeutral();
         happyBirthdayStage.gameObject.SetActive(false);
         happyNewYearStage.gameObject.SetActive(false);
         merryChristmasStage.gameObject.SetActive(false);
@@ -79,6 +81,18 @@ public class StageManager
         {
             character.WearHat(true);
             merryChristmasStage.gameObject.SetActive(true);
+        }
+    }
+
+    private void SetupCharacterAfterShout(bool _isWrongShout, float _)
+    {
+        if (_isWrongShout)
+        {
+            character.FeelSad();
+        }
+        else
+        {
+            character.FeelHappy();
         }
     }
 }
