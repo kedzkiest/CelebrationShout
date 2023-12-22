@@ -64,14 +64,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         HappyBirthdayStage hbStage = FindObjectOfType<HappyBirthdayStage>();
         HappyNewYearStage hnyStage = FindObjectOfType<HappyNewYearStage>();
         MerryChristmasStage mcStage = FindObjectOfType<MerryChristmasStage>();
-        StageManager.Instance.Initialize(character, hbStage, hnyStage, mcStage);
+        Light stageLight = GameObject.FindGameObjectWithTag("StageLight").GetComponent<Light>();
+        StageManager.Instance.Initialize(character, hbStage, hnyStage, mcStage, stageLight);
 
         // Initialize UI
         TitleUI titleUI = titleUI = FindObjectOfType<TitleUI>();
         InGameUI inGameUI = FindObjectOfType<InGameUI>();
         ResultUI resultUI = FindObjectOfType<ResultUI>();
         TransitionAnimation transitionAnimation = FindObjectOfType<TransitionAnimation>();
-        UIManager.Instance.Initialize(titleUI, inGameUI, resultUI, transitionAnimation);
+        SpeechBubbleGenerator speechBubbleGenerator = FindObjectOfType<SpeechBubbleGenerator>();
+        UIManager.Instance.Initialize(titleUI, inGameUI, resultUI, transitionAnimation, speechBubbleGenerator);
 
         // Subscribe user input events
         userInputHandler.OnSpaceKeyPressed += OnSpaceKeyPressed;
@@ -163,6 +165,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     /// Used for adjusting judge timing
     /// </summary>
     float shoutDuration;
+    public event Action<ShoutType> OnShoutEnter = (_shoutType) => { };
     private void OnShoutKeyPressed(ShoutType _shoutType)
     {
         bool cannotShout =
@@ -172,6 +175,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             currentGameState == GameState.RESULT;
 
         if (cannotShout) return;
+
+        OnShoutEnter(_shoutType);
 
         // Play SE
         if (_shoutType == ShoutType.HAPPY_BIRTHDAY)

@@ -27,8 +27,11 @@ public class StageManager
     const string MERRY_CHRISTMAS_STAGE_PREFAB_NAME = "MerryChristmasStage";
     private MerryChristmasStage merryChristmasStage;
 
-    public void Initialize(GameObject _characterObject, HappyBirthdayStage _happyBirthDayStage, 
-        HappyNewYearStage _happyNewYearStage, MerryChristmasStage _merryChristmasStage)
+    [SerializeField]
+    private Light stageLight;
+
+    public void Initialize(GameObject _characterObject, HappyBirthdayStage _happyBirthDayStage,
+        HappyNewYearStage _happyNewYearStage, MerryChristmasStage _merryChristmasStage, Light _stageLight)
     {
         characterObject = _characterObject;
         characterObject.SetActive(false);
@@ -37,6 +40,8 @@ public class StageManager
         happyBirthdayStage = _happyBirthDayStage;
         happyNewYearStage = _happyNewYearStage;
         merryChristmasStage = _merryChristmasStage;
+
+        stageLight = _stageLight;
 
         happyBirthdayStage.gameObject.SetActive(false);
         happyNewYearStage.gameObject.SetActive(false);
@@ -54,6 +59,8 @@ public class StageManager
         happyBirthdayStage.gameObject.SetActive(false);
         happyNewYearStage.gameObject.SetActive(false);
         merryChristmasStage.gameObject.SetActive(false);
+        stageLight.enabled = false;
+        stageLight.color = Color.white;
 
         // On back title transition
         if (_nextState == GameManager.GameState.TITLE)
@@ -68,6 +75,8 @@ public class StageManager
 
     private void SetupStageAfterAnnouncement()
     {
+        stageLight.enabled = true;
+
         GameManager.ShoutType correctShout = GameManager.Instance.correctShoutType;
         if (correctShout == GameManager.ShoutType.HAPPY_BIRTHDAY)
         {
@@ -86,13 +95,18 @@ public class StageManager
 
     private void SetupCharacterAfterShout(bool _isWrongShout, float _)
     {
+        // in case shout before announcement happens
+        stageLight.enabled = true;
+
         if (_isWrongShout)
         {
             character.FeelSad();
+            stageLight.color = Color.blue;
         }
         else
         {
             character.FeelHappy();
+            stageLight.color = Color.yellow;
         }
     }
 }

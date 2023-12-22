@@ -37,19 +37,22 @@ public class UIManager
 
     private TransitionAnimation transitionAnimation;
 
+    private SpeechBubbleGenerator speechBubbleGenerator;
+
     /// <summary>
     /// The event for starting a transition animation.
     /// Receiver conditions following processes by _nextState, and executes _onTransitionComplete function during transition.
     /// </summary>
     public event Action<GameManager.GameState, Action> OnTransition = (_nextState, _onTransitionComplete) => { };
 
-    public void Initialize(TitleUI _titleUI, InGameUI _inGameUI, ResultUI _resultUI, TransitionAnimation _transitionAnimation)
+    public void Initialize(TitleUI _titleUI, InGameUI _inGameUI, ResultUI _resultUI, TransitionAnimation _transitionAnimation, SpeechBubbleGenerator _speechBubbleGenerator)
     {
         // Set UI instances
         titleUI = _titleUI;
         inGameUI = _inGameUI;
         resultUI = _resultUI;
         transitionAnimation = _transitionAnimation;
+        speechBubbleGenerator = _speechBubbleGenerator;
 
         // Set initial UI state
         titleUI.SetVisible(true);
@@ -67,6 +70,7 @@ public class UIManager
         titleUI.Initialize();
         resultUI.Initialize();
         transitionAnimation.Initialize();
+        speechBubbleGenerator.Initialize();
 
         transitionAnimation.OnTransitionProgress += OnTransitionProgress;
     }
