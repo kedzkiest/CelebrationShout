@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SpeechBubbleGenerator : MonoBehaviour
 {
@@ -63,8 +62,6 @@ public class SpeechBubbleGenerator : MonoBehaviour
         float instantiatePositionX = Random.Range(0f, 1f) <= 0.5f ?
             Random.Range(MIN_X_ON_LEFT_GENERATION, MAX_X_ON_LEFT_GENERATION) :
             Random.Range(MIN_X_ON_RIGHT_GENERATION, MAX_X_ON_RIGHT_GENERATION);
-
-        Debug.LogWarning(instantiatePositionX);
 
         _bubble.transform.localPosition = new Vector3
         (
