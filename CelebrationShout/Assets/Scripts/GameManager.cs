@@ -64,7 +64,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         HappyBirthdayStage hbStage = FindObjectOfType<HappyBirthdayStage>();
         HappyNewYearStage hnyStage = FindObjectOfType<HappyNewYearStage>();
         MerryChristmasStage mcStage = FindObjectOfType<MerryChristmasStage>();
-        StageManager.Instance.Initialize(character, hbStage, hnyStage, mcStage);
+        Light stageLight = GameObject.FindGameObjectWithTag("StageLight").GetComponent<Light>();
+        StageManager.Instance.Initialize(character, hbStage, hnyStage, mcStage, stageLight);
 
         // Initialize UI
         TitleUI titleUI = titleUI = FindObjectOfType<TitleUI>();
