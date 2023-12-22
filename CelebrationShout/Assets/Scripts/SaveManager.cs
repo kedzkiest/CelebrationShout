@@ -19,7 +19,8 @@ public class SaveManager
         }
     }
 
-    readonly string SAVEDATA_PATH = Application.persistentDataPath + "/savedata" + ".json";
+    // Implementation with json, which was not successful in WebGL build.
+    // readonly string SAVEDATA_PATH = Application.persistentDataPath + "/savedata" + ".json";
 
     class SaveData
     {
@@ -30,8 +31,22 @@ public class SaveManager
 
     private SaveData saveData;
 
-    public float GetQuickestShoutTime() { return saveData.quickestShoutTime; }
-    public void SetQuickestShoutTime(float _time) { saveData.quickestShoutTime = _time; }
+    const string QUICKEST_SHOUT_TIME = "QUICKEST_SHOUT_TIME";
+
+    // Implementation with json, which was not successful in WebGL build.
+    // public float GetQuickestShoutTime() { return saveData.quickestShoutTime; }
+    public float GetQuickestShoutTime()
+    {
+        return PlayerPrefs.GetFloat(QUICKEST_SHOUT_TIME, float.MaxValue);
+    }
+
+    // Implementation with json, which was not successful in WebGL build.
+    // public void SetQuickestShoutTime(float _time) { saveData.quickestShoutTime = _time; }
+    public void SetQuickestShoutTime(float _time)
+    {
+        PlayerPrefs.SetFloat(QUICKEST_SHOUT_TIME, _time);
+    }
+
 
     public void Initialize()
     {
@@ -41,6 +56,11 @@ public class SaveManager
 
     public void Save()
     {
+        return;
+
+        // Implementation with json, which was not successful in WebGL build.
+
+        /*
         // Serialize Obj -> json
         string jsonSaveData = JsonUtility.ToJson(saveData);
 
@@ -57,10 +77,16 @@ public class SaveManager
 
             Debug.Log("Saved: " + jsonSaveData);
         }
+        */
     }
 
     public void Load()
     {
+        return;
+
+        // Implementation with json, which was not successful in WebGL build.
+
+        /*
         try
         {
             using (FileStream fs = new FileStream(SAVEDATA_PATH, FileMode.Open))
@@ -96,10 +122,14 @@ public class SaveManager
             Save();
             Load();
         }
+        */
     }
 
     public void ResetSaveData()
     {
-        saveData.quickestShoutTime = float.MaxValue;
+        // Implementation with json, which was not successful in WebGL build.
+        // saveData.quickestShoutTime = float.MaxValue;
+
+        PlayerPrefs.SetFloat(QUICKEST_SHOUT_TIME, float.MaxValue);
     }
 }
