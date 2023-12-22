@@ -26,7 +26,7 @@ public class BestScore : MonoBehaviour
         }
         else
         {
-            bestScore.text = "Best Score: " + SaveManager.Instance.GetQuickestShoutTime().ToString(".00") + "s";
+            bestScore.text = "Best Score: " + SaveManager.Instance.GetQuickestShoutTime().ToString("0.00") + "s";
         }
     }
 }
