@@ -33,6 +33,9 @@ public class UserInputHandler : MonoBehaviour
     /// </summary>
     public event Action OnEscapeKeyPressed = () => { };
 
+    /// <summary>
+    /// The cooltime to avoid sequential escape key input.
+    /// </summary>
     const float ESCAPE_KEY_EVENT_COOLTIME = 3.0f;
     private float elapsedTimeFromPreviousEscapeKeyPress;
 

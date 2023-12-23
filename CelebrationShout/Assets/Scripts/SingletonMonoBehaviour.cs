@@ -1,3 +1,8 @@
+/* SingletonMonoBehaviour.cs
+ * 
+ * A base class for a class that derives from both Singleton and UnityEngine.MonoBehaviour.
+ */
+
 using UnityEngine;
 using System;
 
