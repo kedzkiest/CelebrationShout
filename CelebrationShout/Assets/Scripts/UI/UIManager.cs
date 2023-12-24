@@ -51,7 +51,7 @@ public class UIManager
     /// The event for starting a transition animation.
     /// Receiver conditions following processes by _nextState, and executes _onTransitionComplete function during transition.
     /// </summary>
-    public event Action<GameManager.GameState, Action> OnTransition = (_nextState, _onTransitionComplete) => { };
+    public event Action<GameManager.GameState, Action> OnTransitionEnter = (_nextState, _onTransitionComplete) => { };
 
     public void Initialize(TitleUI _titleUI, InGameUI _inGameUI, ResultUI _resultUI, TransitionAnimation _transitionAnimation, SpeechBubbleGenerator _speechBubbleGenerator)
     {
@@ -82,7 +82,7 @@ public class UIManager
         speechBubbleGenerator.Initialize();
 
         // Register event on transition animation happens
-        transitionAnimation.OnTransitionProgress += OnTransitionProgress;
+        transitionAnimation.OnTransitionProgressEvent += OnTransitionProgress;
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public class UIManager
     /// </summary>
     private void OnGameStart()
     {
-        OnTransition(GameManager.GameState.INGAME_INITIAL, SetVisibilityOnGameStart);
+        OnTransitionEnter(GameManager.GameState.INGAME_INITIAL, SetVisibilityOnGameStart);
     }
     private void SetVisibilityOnGameStart()
     {
@@ -103,7 +103,7 @@ public class UIManager
     /// </summary>
     private void OnGameRestart()
     {
-        OnTransition(GameManager.GameState.INGAME_INITIAL, SetVisibilityOnGameRestart);
+        OnTransitionEnter(GameManager.GameState.INGAME_INITIAL, SetVisibilityOnGameRestart);
     }
     private void SetVisibilityOnGameRestart()
     {
@@ -125,7 +125,7 @@ public class UIManager
     /// </summary>
     private void OnBackTitle()
     {
-        OnTransition(GameManager.GameState.TITLE, SetVisibilityOnBackTitle);
+        OnTransitionEnter(GameManager.GameState.TITLE, SetVisibilityOnBackTitle);
     }
     private void SetVisibilityOnBackTitle()
     {
@@ -136,7 +136,7 @@ public class UIManager
 
     private void OnGameReset()
     {
-        OnTransition(GameManager.GameState.TITLE, UpdateBestScore);
+        OnTransitionEnter(GameManager.GameState.TITLE, UpdateBestScore);
     }
     private void UpdateBestScore()
     {

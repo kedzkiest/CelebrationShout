@@ -12,26 +12,26 @@ public class SpeechBubbleGenerator : MonoBehaviour
     /// The prefab of happy birthday speech bubble.
     /// </summary>
     [SerializeField]
-    private GameObject HappyBirthdayBubble;
+    private GameObject happyBirthdayBubble;
 
     /// <summary>
     /// The prefab of happy new year speech bubble.
     /// </summary>
     [SerializeField]
-    private GameObject HappyNewYearBubble;
+    private GameObject happyNewYearBubble;
 
     /// <summary>
     /// The prefab of merry christmas speech bubble.
     /// </summary>
     [SerializeField]
-    private GameObject MerryChristmasBubble;
+    private GameObject merryChristmasBubble;
 
     /// <summary>
     /// The animation clip used for speech bubble generation.
     /// Used for adjusting the timing to destroy generated speech bubbles.
     /// </summary>
     [SerializeField]
-    private AnimationClip SpeechBubbleAnimation;
+    private AnimationClip speechBubbleAnimation;
 
     // The values to decide the x position of instantiated bubbles.
     // The bubbles hardly cover the stage center (where character face exists for example) within this range.
@@ -49,19 +49,19 @@ public class SpeechBubbleGenerator : MonoBehaviour
     {
         if(_shoutType == GameManager.ShoutType.HAPPY_BIRTHDAY)
         {
-            GameObject bubble = Instantiate(HappyBirthdayBubble);
+            GameObject bubble = Instantiate(happyBirthdayBubble);
 
             SetupBubble(bubble);
         }
         else if(_shoutType == GameManager.ShoutType.HAPPY_NEW_YEAR)
         {
-            GameObject bubble = Instantiate(HappyNewYearBubble);
+            GameObject bubble = Instantiate(happyNewYearBubble);
 
             SetupBubble(bubble);
         }
         else if(_shoutType == GameManager.ShoutType.MERRY_CHRISTMAS)
         {
-            GameObject bubble = Instantiate(MerryChristmasBubble);
+            GameObject bubble = Instantiate(merryChristmasBubble);
 
             SetupBubble(bubble);
         }
@@ -88,6 +88,6 @@ public class SpeechBubbleGenerator : MonoBehaviour
         );
 
         // Destroy generated bubbles after its animation finishes
-        Destroy(_bubble, SpeechBubbleAnimation.length);
+        Destroy(_bubble, speechBubbleAnimation.length);
     }
 }

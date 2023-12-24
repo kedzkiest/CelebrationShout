@@ -8,5 +8,5 @@ public class HappyNewYearStage : MonoBehaviour
     /// For example, kagami mochi (layered rice cake), text shows new year (2024 at this moment), etc..
     /// </summary>
     [SerializeField]
-    List<GameObject> elements = new List<GameObject>();
+    private List<GameObject> elements = new List<GameObject>();
 }
