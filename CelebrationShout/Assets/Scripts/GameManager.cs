@@ -42,16 +42,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private float waitTimeBeforePreparation;
 
     /// <summary>
-    /// Minimun time from the start of counting until the answer model appears.
+    /// The minimum duration of announcement prepartion (the duration of drum roll sound, for example)
     /// </summary>
     [SerializeField]
-    private float minPreparationTime;
+    private float minPreparationDuration;
 
     /// <summary>
-    /// Maximun time from the start of counting until the answer model appears.
+    /// The maximum duration of announcement prepartion (the duration of drum roll sound, for example)
     /// </summary>
     [SerializeField]
-    private float maxPreparationTime;
+    private float maxPreparationDuration;
 
     /// <summary>
     /// The time between response to player shout finishes and result view appears.
@@ -176,7 +176,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         Debug.Log("Preparation Start");
         SoundPlayer.Instance.Play(SoundTable.SoundName.DRUM_ROLL);
-        yield return new WaitForSeconds(UnityEngine.Random.Range(minPreparationTime, maxPreparationTime));
+        yield return new WaitForSeconds(UnityEngine.Random.Range(minPreparationDuration, maxPreparationDuration));
         Debug.Log("Preparation Finish");
         announceTime = Time.time;
         Debug.Log(announceTime);
