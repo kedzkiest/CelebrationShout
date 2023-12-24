@@ -34,7 +34,7 @@ public class TransitionAnimation : MonoBehaviour
         AnimationClip clip = (AnimationClip)(Resources.Load(TRANSITION_ANIMATION_CLIP_PATH));
         transitionDuration = clip.length;
 
-        UIManager.Instance.OnTransition += Invoke;
+        UIManager.Instance.OnTransitionEnter += Invoke;
     }
 
     private void Invoke(GameManager.GameState _nextState, Action _onTransitionComplete)
