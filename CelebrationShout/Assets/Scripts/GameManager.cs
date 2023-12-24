@@ -323,6 +323,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SoundPlayer.Instance.Play(SoundTable.SoundName.TRANSITION_BUZZER);
         OnBackTitle();
 
+        // Reset game data
         if(currentGameState == GameState.TITLE)
         {
             SaveManager.Instance.ResetSaveData();
