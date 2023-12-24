@@ -27,7 +27,7 @@ public class TransitionAnimation : MonoBehaviour
     /// <summary>
     /// The fucntion that is executed during the transition.
     /// </summary>
-    private Action onBackGroundUpdate;
+    private event Action actionOnTransitionProgress;
 
     public void Initialize()
     {
@@ -42,7 +42,7 @@ public class TransitionAnimation : MonoBehaviour
         nextState = _nextState;
 
         // The UI change after the transition is indeed executed between the transition
-        onBackGroundUpdate = _onTransitionComplete;
+        actionOnTransitionProgress= _onTransitionComplete;
 
         StartCoroutine(DoTransition());
     }
@@ -60,16 +60,16 @@ public class TransitionAnimation : MonoBehaviour
         transitionAnimator.enabled = false;
     }
 
-    public event Action<GameManager.GameState> OnTransitionProgress = (_nextState) => { };
+    public event Action<GameManager.GameState> OnTransitionProgressEvent = (_nextState) => { };
     /// <summary>
     /// The process executed during the transition.
     /// Caller is the animation event of transition animation.
     /// </summary>
-    public void OnBackgroundUpdate()
+    public void OnTransitionProgress()
     {
-        OnTransitionProgress(nextState);
+        OnTransitionProgressEvent(nextState);
 
-        onBackGroundUpdate.Invoke();
+        actionOnTransitionProgress.Invoke();
     }
 
     /// <summary>

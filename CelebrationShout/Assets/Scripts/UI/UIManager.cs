@@ -82,7 +82,7 @@ public class UIManager
         speechBubbleGenerator.Initialize();
 
         // Register event on transition animation happens
-        transitionAnimation.OnTransitionProgress += OnTransitionProgress;
+        transitionAnimation.OnTransitionProgressEvent += OnTransitionProgress;
     }
 
     /// <summary>
