@@ -35,8 +35,16 @@ public class UIManager
     /// </summary>
     private ResultUI resultUI;
 
+    /// <summary>
+    /// The instance of TransitionAnimation.
+    /// Used for registering events on transition animation happens.
+    /// </summary>
     private TransitionAnimation transitionAnimation;
 
+    /// <summary>
+    /// The instance of SpeechBubbleGenerator.
+    /// Only used for initializing it.
+    /// </summary>
     private SpeechBubbleGenerator speechBubbleGenerator;
 
     /// <summary>
@@ -67,11 +75,13 @@ public class UIManager
         GameManager.Instance.OnBestScoreUpdated += UpdateBestScore;
         GameManager.Instance.OnGameReset += OnGameReset;
 
+        // Run some initialization methods of compositing components
         titleUI.Initialize();
         resultUI.Initialize();
         transitionAnimation.Initialize();
         speechBubbleGenerator.Initialize();
 
+        // Register event on transition animation happens
         transitionAnimation.OnTransitionProgress += OnTransitionProgress;
     }
 

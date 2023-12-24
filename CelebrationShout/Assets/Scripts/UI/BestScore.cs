@@ -22,10 +22,12 @@ public class BestScore : MonoBehaviour
         
         if(quickestShoutTime >= float.MaxValue)
         {
+            // If initial value
             bestScore.text = "Best Score:";
         }
         else
         {
+            // If user updated value
             bestScore.text = "Best Score: " + SaveManager.Instance.GetQuickestShoutTime().ToString("0.00") + "s";
         }
     }
