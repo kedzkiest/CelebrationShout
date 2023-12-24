@@ -273,7 +273,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (_isCorrectAnswer)
         {
             Debug.Log("Correct");
-            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.CORRECT_SHOUT);
+            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.RESPONSE_TO_CORRECT_SHOUT);
 
             // update best score
             shoutTime = correctAnswerTime - announceTime;
@@ -286,7 +286,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         else
         {
             Debug.Log("Wrong");
-            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.WRONG_SHOUT);
+            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.RESPONSE_TO_WRONG_SHOUT);
         }
 
         OnShoutEnd(!_isCorrectAnswer, shoutTime);
