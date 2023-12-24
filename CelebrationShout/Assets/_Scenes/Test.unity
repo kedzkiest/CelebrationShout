@@ -2423,8 +2423,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userInputHandler: {fileID: 228267129}
-  minPreparationTime: 1
-  maxPreparationTime: 1
+  waitTimeBeforePreparation: 1
+  minPreparationDuration: 1
+  maxPreparationDuration: 1
+  waitTimeBeforeResult: 1
 --- !u!4 &907913400
 Transform:
   m_ObjectHideFlags: 0

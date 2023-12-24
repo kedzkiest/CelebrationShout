@@ -52,6 +52,7 @@ public class TransitionAnimation : MonoBehaviour
         // Animator ignition is done by on/off animator component
         transitionAnimator.enabled = true;
 
+        // Wait until a transition animation finishes
         yield return new WaitForSeconds(transitionDuration);
 
         // Reset the animator state so that it can run again

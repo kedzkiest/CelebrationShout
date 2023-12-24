@@ -2,23 +2,39 @@ using UnityEngine;
 
 public class SpeechBubbleGenerator : MonoBehaviour
 {
+    /// <summary>
+    /// The UI canvas to draw speech bubbles.
+    /// </summary>
     [SerializeField]
     private Transform canvas;
 
+    /// <summary>
+    /// The prefab of happy birthday speech bubble.
+    /// </summary>
     [SerializeField]
     private GameObject HappyBirthdayBubble;
 
+    /// <summary>
+    /// The prefab of happy new year speech bubble.
+    /// </summary>
     [SerializeField]
     private GameObject HappyNewYearBubble;
 
+    /// <summary>
+    /// The prefab of merry christmas speech bubble.
+    /// </summary>
     [SerializeField]
     private GameObject MerryChristmasBubble;
 
+    /// <summary>
+    /// The animation clip used for speech bubble generation.
+    /// Used for adjusting the timing to destroy generated speech bubbles.
+    /// </summary>
     [SerializeField]
     private AnimationClip SpeechBubbleAnimation;
 
     // The values to decide the x position of instantiated bubbles.
-    // The bubbles hardly cover character face within this range.
+    // The bubbles hardly cover the stage center (where character face exists for example) within this range.
     const float MIN_X_ON_LEFT_GENERATION = -600f;
     const float MAX_X_ON_LEFT_GENERATION = -300f;
     const float MIN_X_ON_RIGHT_GENERATION = 300f;
@@ -53,8 +69,8 @@ public class SpeechBubbleGenerator : MonoBehaviour
 
     private void SetupBubble(GameObject _bubble)
     {
+        // Set bubble's parent to canvas for drawing as UI
         _bubble.transform.SetParent(canvas);
-        _bubble.transform.localScale = Vector3.one;
 
         // first choose left or right by Random.Range(0, 1)
         // if left chosen (<= 0.5f), choose x from the range [-600, -300].
@@ -63,6 +79,7 @@ public class SpeechBubbleGenerator : MonoBehaviour
             Random.Range(MIN_X_ON_LEFT_GENERATION, MAX_X_ON_LEFT_GENERATION) :
             Random.Range(MIN_X_ON_RIGHT_GENERATION, MAX_X_ON_RIGHT_GENERATION);
 
+        // Set bubble's spawn position
         _bubble.transform.localPosition = new Vector3
         (
             x: instantiatePositionX,
@@ -70,6 +87,7 @@ public class SpeechBubbleGenerator : MonoBehaviour
             z: 0
         );
 
+        // Destroy generated bubbles after its animation finishes
         Destroy(_bubble, SpeechBubbleAnimation.length);
     }
 }

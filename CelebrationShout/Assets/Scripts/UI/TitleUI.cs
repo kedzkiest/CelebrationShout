@@ -46,6 +46,10 @@ public class TitleUI : MonoBehaviour
         bestScore.Initialize();
     }
 
+    /// <summary>
+    /// The method to set visibilities of all fields in this class.
+    /// </summary>
+    /// <param name="_isVisible"></param>
     public void SetVisible(bool _isVisible)
     {
         background.enabled = _isVisible;

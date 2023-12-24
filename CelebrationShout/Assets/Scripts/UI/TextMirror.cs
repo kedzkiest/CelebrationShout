@@ -1,3 +1,11 @@
+/* TextMirror.cs
+ * 
+ * The class just for copying the content of one text to another.
+ * 
+ * Poor implementation because of short time.
+ * Better solution should exists (using an event for example).
+ */
+
 using TMPro;
 using UnityEngine;
 

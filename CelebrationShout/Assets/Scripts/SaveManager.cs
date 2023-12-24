@@ -1,3 +1,9 @@
+/* SaveManager.cs
+ * 
+ * !NOTE: originally implemented with json, but later changed to PlayerPrefs.
+ * But implementation with json is left for a potential future use.
+ */
+
 using System;
 using System.IO;
 using UnityEngine;

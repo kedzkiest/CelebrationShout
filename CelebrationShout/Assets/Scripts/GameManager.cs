@@ -23,6 +23,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         HAPPY_NEW_YEAR,
         MERRY_CHRISTMAS
     }
+    /// <summary>
+    /// The expected ansser to be shouted.
+    /// Randomly chosen when a game starts.
+    /// </summary>
     public ShoutType correctShoutType { get; private set; }
 
     /// <summary>
@@ -32,16 +36,28 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private UserInputHandler userInputHandler;
 
     /// <summary>
-    /// Minimun time from the start of counting until the answer model appears.
+    /// The wait time after a transition animation finishes.
     /// </summary>
     [SerializeField]
-    private float minPreparationTime;
+    private float waitTimeBeforePreparation;
 
     /// <summary>
-    /// Maximun time from the start of counting until the answer model appears.
+    /// The minimum duration of announcement prepartion (the duration of drum roll sound, for example)
     /// </summary>
     [SerializeField]
-    private float maxPreparationTime;
+    private float minPreparationDuration;
+
+    /// <summary>
+    /// The maximum duration of announcement prepartion (the duration of drum roll sound, for example)
+    /// </summary>
+    [SerializeField]
+    private float maxPreparationDuration;
+
+    /// <summary>
+    /// The time between response to player shout finishes and result view appears.
+    /// </summary>
+    [SerializeField]
+    private float waitTimeBeforeResult;
 
     private new void Awake()
     {
@@ -116,16 +132,29 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SoundPlayer.Instance.Play(SoundTable.SoundName.TRANSITION_BUZZER);
     }
 
+    /// <summary>
+    /// The method called when a transition finishes.
+    /// Caller is transition animation event.
+    /// </summary>
     public void OnTransitionToInGameFinish()
     {
         SoundPlayer.Instance.Stop();
 
         currentGameState = GameState.INGAME_INITIAL;
 
-        StartCoroutine(WaitBeforeAnnouncePreparation(1.0f));
+        StartCoroutine(WaitBeforeAnnouncePreparation(waitTimeBeforePreparation));
     }
 
+
+    /// <summary>
+    /// Coroutine for announcement preparation sequecne.
+    /// We have this instance because we can stop it in cace of early shout penalty.
+    /// </summary>
     Coroutine announcePreparationCoroutine;
+
+    /// <summary>
+    /// The sequence between transition animation finishes and announcement preparation starts.
+    /// </summary>
     private IEnumerator WaitBeforeAnnouncePreparation(float _seconds)
     {
         Debug.Log("Wait Start");
@@ -147,7 +176,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         Debug.Log("Preparation Start");
         SoundPlayer.Instance.Play(SoundTable.SoundName.DRUM_ROLL);
-        yield return new WaitForSeconds(UnityEngine.Random.Range(minPreparationTime, maxPreparationTime));
+        yield return new WaitForSeconds(UnityEngine.Random.Range(minPreparationDuration, maxPreparationDuration));
         Debug.Log("Preparation Finish");
         announceTime = Time.time;
         Debug.Log(announceTime);
@@ -207,12 +236,20 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
     }
 
+    /// <summary>
+    /// The method to be called in case of early shout penalty.
+    /// </summary>
+    /// <param name="_seconds"></param>
+    /// <returns></returns>
     private IEnumerator WaitBeforePenalty(float _seconds)
     {
+        // Stop an announcement preparation routine so that it does not terminate over time
         StopCoroutine(announcePreparationCoroutine);
 
+        // Wait until a shout finishes
         yield return new WaitForSeconds(_seconds);
 
+        // After shout finishes, announce preparation sound finishes (drum roll for example)
         SoundPlayer.Instance.Stop();
     }
 
@@ -236,7 +273,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (_isCorrectAnswer)
         {
             Debug.Log("Correct");
-            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.CORRECT_SHOUT);
+            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.RESPONSE_TO_CORRECT_SHOUT);
 
             // update best score
             shoutTime = correctAnswerTime - announceTime;
@@ -249,7 +286,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         else
         {
             Debug.Log("Wrong");
-            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.WRONG_SHOUT);
+            SoundPlayer.Instance.PlayOneShot(SoundTable.SoundName.RESPONSE_TO_WRONG_SHOUT);
         }
 
         OnShoutEnd(!_isCorrectAnswer, shoutTime);
@@ -262,7 +299,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         currentGameState = GameState.SHOW_RESPONSE;
 
         Debug.Log("Response start");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitTimeBeforeResult);
         Debug.Log("Response finish");
 
         ShowResult();

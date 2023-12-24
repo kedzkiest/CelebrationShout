@@ -17,12 +17,22 @@ public class ResultUI : MonoBehaviour
     [SerializeField]
     private Image panel;
 
+    /// <summary>
+    /// The actual score text to be updated according to player shout time.
+    /// </summary>
     [SerializeField]
     private TextMeshProUGUI score_real;
 
+    /// <summary>
+    /// The decoration score text.
+    /// </summary>
     [SerializeField]
     private TextMeshProUGUI score_fake;
 
+    /// <summary>
+    /// Guides shows the step to next sequence.
+    /// For example: - Press Space to Retry - , - Press Escape to Title -
+    /// </summary>
     [SerializeField]
     private List<TextMeshProUGUI> guidesToNext = new List<TextMeshProUGUI>();
 
@@ -31,6 +41,10 @@ public class ResultUI : MonoBehaviour
         GameManager.Instance.OnShoutEnd += UpdateScore;
     }
 
+    /// <summary>
+    /// The method to set visibilities of all fields in this class.
+    /// </summary>
+    /// <param name="_isVisible"></param>
     public void SetVisible(bool _isVisible)
     {
         background.enabled = _isVisible;
@@ -46,7 +60,7 @@ public class ResultUI : MonoBehaviour
 
     private void UpdateScore(bool _isWrongShout, float _shoutTime)
     {
-        Debug.LogWarning("called with shouttime: " + _shoutTime);
+        Debug.Log("shouttime: " + _shoutTime);
 
         // in case player did wrong shout
         if(_isWrongShout)
