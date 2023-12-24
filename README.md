@@ -5,4 +5,4 @@
 ![Plan drawio](https://github.com/kedzkiest/CelebrationShout/assets/66341676/19faefa8-5fac-4d16-bd08-3b5162b42efb)
 
 ## Class Diagram
-![Class drawio](https://github.com/kedzkiest/CelebrationShout/assets/66341676/4b94af1c-daf8-4489-a2d6-036c29d60505)
+![Class drawio](https://github.com/kedzkiest/CelebrationShout/assets/66341676/269c8df3-dab4-4d29-9630-2c8ac6e9eee7)
