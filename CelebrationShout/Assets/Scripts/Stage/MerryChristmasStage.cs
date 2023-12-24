@@ -8,5 +8,5 @@ public class MerryChristmasStage : MonoBehaviour
     /// For example, christmas tree, gift boxes, santa hat, etc..
     /// </summary>
     [SerializeField]
-    List<GameObject> elements = new List<GameObject>();
+    private List<GameObject> elements = new List<GameObject>();
 }

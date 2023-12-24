@@ -8,5 +8,5 @@ public class HappyBirthdayStage : MonoBehaviour
     /// For example, birthday cake, candle, etc..
     /// </summary>
     [SerializeField]
-    List<GameObject> elements = new List<GameObject>();
+    private List<GameObject> elements = new List<GameObject>();
 }
